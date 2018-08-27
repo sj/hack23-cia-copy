@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1" metadata-complete="false"  >
+
+   <security-constraint>
+   	 <display-name>DenyHttpMethodsConstraint</display-name>
+	 <web-resource-collection>
+	  <web-resource-name>DenyHttpMethodsConstraint</web-resource-name>
+	  <url-pattern>/*</url-pattern>
+	  <http-method>PUT</http-method>
+	  <http-method>DELETE</http-method>
+	  <http-method>OPTIONS</http-method>
+	  <http-method>TRACE</http-method>
+	 </web-resource-collection>
+	 <auth-constraint/>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>EntireSiteSSL</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	<listener>
+      <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:META-INF/cia-application-context.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+    	<listener-class>org.atmosphere.cpr.SessionSupport</listener-class>
+	</listener>
+	<context-param>
+	    <param-name>org.atmosphere.cpr.sessionSupport</param-name>
+	    <param-value>true</param-value>
+	</context-param>
+	  <context-param>
+        <param-name>org.atmosphere.useStream</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+		<async-supported>true</async-supported>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>net.bull.javamelody.SessionListener</listener-class>
+	</listener>
+
+   <filter>
+       <filter-name>customResourceFilter</filter-name>
+       <filter-class>net.bull.javamelody.CustomResourceFilter</filter-class>
+       <async-supported>true</async-supported>       
+       <init-param>
+           <param-name>customizableMonitoring.css</param-name>
+           <param-value>/VAADIN/themes/cia/customizedMonitoring.css</param-value>
+       </init-param>
+       <init-param>
+           <param-name>useForward</param-name>
+           <param-value>true</param-value>
+       </init-param>
+	   </filter>
+   <filter-mapping>
+       <filter-name>customResourceFilter</filter-name>
+       <url-pattern>/monitoring</url-pattern>
+   </filter-mapping>   
+   
+	<filter>
+		<filter-name>monitoring</filter-name>
+		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+		<async-supported>true</async-supported>
+		<init-param>
+			<param-name>displayed-counters</param-name>
+			<param-value>http,spring,sql,error,log</param-value>
+		</init-param>
+		<init-param>
+			<param-name>quartz-default-listener-disabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>sampling-seconds</param-name>
+			<param-value>10</param-value>
+		</init-param>
+		<init-param>
+			<param-name>sampling-included-packages</param-name>
+			<param-value>com.hack23</param-value>
+		</init-param>
+		<init-param>
+			<param-name>system-actions-enabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>log</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>disabled</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+           <param-name>jmx-expose-enabled</param-name>
+           <param-value>true</param-value>
+       </init-param>       
+        <init-param>
+            <param-name>maven-repositories</param-name>
+            <param-value>https://www.hack23.com/nexus/repository/maven-public/,~/.m2/repository,https://repo1.maven.org/maven2/</param-value>
+        </init-param>
+        <init-param>
+			<param-name>rum-enabled</param-name>
+			<param-value>false</param-value>
+		</init-param>       		
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>monitoring</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+</web-app>

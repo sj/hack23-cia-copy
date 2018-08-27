@@ -1,0 +1,155 @@
+/*
+ * Copyright 2010 James Pether Sörling
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *	$Id$
+ *  $HeadURL$
+*/
+package com.hack23.cia.service.component.agent.impl.command;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import javax.jms.Destination;
+import javax.jms.JMSException;
+
+import org.apache.activemq.broker.jmx.QueueViewMBean;
+import org.apache.activemq.web.BrokerFacadeSupport;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.hack23.cia.model.internal.application.data.impl.DataAgentOperation;
+import com.hack23.cia.model.internal.application.data.impl.DataAgentTarget;
+import com.hack23.cia.model.internal.application.data.impl.DataAgentWorkOrder;
+import com.hack23.cia.service.component.agent.api.DataAgentApi;
+import com.hack23.cia.service.component.agent.impl.AbstractServiceComponentAgentFunctionalIntegrationTest;
+import com.hack23.cia.service.component.agent.impl.common.jms.JmsSender;
+
+/**
+ * The Class DataAgentApiITest.
+ */
+public final class DataAgentApiITest extends AbstractServiceComponentAgentFunctionalIntegrationTest {
+
+	/** The data agent api. */
+	@Autowired
+	private DataAgentApi dataAgentApi;
+
+	/** The broker query. */
+	@Autowired
+	private BrokerFacadeSupport brokerQuery;
+
+	/**
+	 * Import riksdagen data success test.
+	 *
+	 * @throws JMSException
+	 *             the JMS exception
+	 */
+	@Test
+	public void importRiksdagenDataSuccessTest() throws JMSException {
+		final JmsSender jmsSenderMock = mock(JmsSender.class);
+        ReflectionTestUtils.setField(dataAgentApi, "jmsSender", jmsSenderMock);
+
+		dataAgentApi.execute(new DataAgentWorkOrder().withOperation(DataAgentOperation.IMPORT).withTarget(DataAgentTarget.MODEL_EXTERNAL_RIKSDAGEN));
+
+		final ArgumentCaptor<Destination> destCaptor = ArgumentCaptor.forClass(Destination.class);
+
+		final ArgumentCaptor<Serializable> stringCaptor = ArgumentCaptor.forClass(Serializable.class);
+
+		verify(jmsSenderMock, times(7)).send(destCaptor.capture(),stringCaptor.capture());
+
+		final List<Serializable> capturedStrings = stringCaptor.getAllValues();
+		final List<Destination> capturedDestinations = destCaptor.getAllValues();
+
+		assertNotNull(capturedStrings);
+		assertNotNull(capturedDestinations);
+
+		//waitUntilQueueIsEmpty("riksdagen");
+	}
+
+	/**
+	 * Import worldbank data success test.
+	 *
+	 * @throws JMSException
+	 *             the JMS exception
+	 */
+	@Test
+	public void importWorldbankDataSuccessTest() throws JMSException {
+		final JmsSender jmsSenderMock = mock(JmsSender.class);
+        ReflectionTestUtils.setField(dataAgentApi, "jmsSender", jmsSenderMock);
+
+		dataAgentApi.execute(new DataAgentWorkOrder().withOperation(DataAgentOperation.IMPORT).withTarget(DataAgentTarget.MODEL_EXTERNAL_WORLDBANK));
+
+		final ArgumentCaptor<Destination> destCaptor = ArgumentCaptor.forClass(Destination.class);
+
+		final ArgumentCaptor<Serializable> stringCaptor = ArgumentCaptor.forClass(Serializable.class);
+
+		verify(jmsSenderMock, times(4)).send(destCaptor.capture(),stringCaptor.capture());
+
+		final List<Serializable> capturedStrings = stringCaptor.getAllValues();
+		final List<Destination> capturedDestinations = destCaptor.getAllValues();
+
+		assertNotNull(capturedStrings);
+		assertNotNull(capturedDestinations);
+
+		//waitUntilQueueIsEmpty("worldbank");
+	}
+
+	/**
+	 * Wait until queue is empty.
+	 *
+	 * @param queue
+	 *            the queue
+	 */
+	private void waitUntilQueueIsEmpty(final String queue) {
+		try {
+			while (!isAllCompleted(brokerQuery.getQueues(), queue)) {
+				;
+			}
+			while (brokerQuery.getBrokerAdmin().getTotalDequeueCount() != brokerQuery.getBrokerAdmin()
+					.getTotalEnqueueCount()) {
+				;
+			}
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Checks if is all completed.
+	 *
+	 * @param queues
+	 *            the queues
+	 * @param queue2
+	 *            the queue 2
+	 * @return true, if is all completed
+	 */
+	private boolean isAllCompleted(final Collection<QueueViewMBean> queues, final String queue2) {
+		boolean allCompleted = true;
+		for (final QueueViewMBean queue : queues) {
+			if (queue.getName().toLowerCase().contains("riksdagen")) {
+				allCompleted = allCompleted && queue.getEnqueueCount() == queue.getDequeueCount();
+			}
+		}
+		return allCompleted;
+	}
+
+}

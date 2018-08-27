@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>parent-service-pom</artifactId>
+    <groupId>com.hack23.cia</groupId>
+    <version>2018.8.18-SNAPSHOT</version>
+    <relativePath>../parent-service-pom/pom.xml</relativePath>
+  </parent>
+  <artifactId>service.data.api</artifactId>
+  <packaging>jar</packaging>
+  <name>service.data.api</name>
+  <description>service.data.api</description>
+  <url>github:https://hack23.github.io/cia/service.data.api</url>
+  <inceptionYear>2010</inceptionYear>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:https://github.com/Hack23/cia.git</connection>
+    <developerConnection>scm:git:https://github.com/Hack23/cia.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/Hack23/cia/tree/master/service.data.api</url>
+  </scm>
+  <distributionManagement>
+    <site>
+      <id>github</id>
+      <url>github:http://hack23.github.io/cia/service.data.api</url>
+    </site>
+  </distributionManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.hack23.cia</groupId>
+      <artifactId>model.internal.application.user.impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

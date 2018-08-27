@@ -1,0 +1,209 @@
+@mixin cia {
+
+	@include valo;
+
+/*
+	$color1: $panelCaptionColor;
+    @include valo-panel-caption-style($background-color: $color1);
+	@include valo-caption-style($background-color: $color1);
+
+
+	HeaderText
+	http://www.color-hex.com/color/003cf0
+
+
+	http://www.color-hex.com/color/00b4f0
+	http://www.color-hex.com/color/ccf2ff
+
+	http://www.color-hex.com/color/40b527
+	http://www.color-hex.com/color/deffd7
+
+*/
+
+
+	$headerBorderRadius : 6px;
+	$headerFontSize : 16px;
+
+	.v-panel-page-panel {
+		border: 1px solid rgba(0, 0, 0, .6);
+	}
+
+	.v-layout-content-overview-panel-level1 {
+		overflow: scroll;
+		background-color: rgba(0, 0, 0, .6);
+		border: 2px inset #2deff9;
+		border-radius: 3px 3px 3px 3px / 3px 3px 3px 3px;
+		padding: 6px;
+		margin: 4px;
+	}
+
+	.v-layout-content-overview-panel-level2 {
+		width: 100%;
+
+		background-color: rgba(0, 0, 0, .6);
+		color: white;
+		border: 2px inset #2deff9;
+		border-radius: 3px 3px 3px 3px / 3px 3px 3px 3px;
+		height: 100px;
+        display: inline-block;
+
+	    .title {
+	    	font-weight: bold;
+	    	font-size: 20px;
+			height: 40px;
+			text-align: center;
+	    }
+
+	    .itembox {
+	    	height: 60px;
+	        white-space: normal;
+	        text-align: left;
+	    }
+	}
+
+	.v-layout-content-overview-panel-level2[width-range~="0-600px"] {
+		padding: 4px;
+		margin: 2px;
+
+		.title {
+			width: 100%;
+			font-weight: bold;
+	    	font-size: 16px;
+			height: 30px;
+			text-align: center;
+
+	    }
+
+	    .itembox {
+	    	width: 100%;
+	    	height: 70px;
+	        white-space: normal;
+	        text-align: left;
+
+	    }
+
+	}
+
+	.v-layout-content-overview-panel-level2[width-range~="600px-"] {
+		padding: 6px;
+		margin: 4px;
+
+	    .title {
+			width: 100%;
+	    }
+
+	    .itembox {
+	    	width: 100%;
+	    }
+	}
+
+	.v-layout-content-pagemode-panel-level2 {
+		width: 100%;
+
+		background-color: rgba(0, 0, 0, .6);
+		color: white;
+		border: 2px inset #2deff9;
+		border-radius: 3px 3px 3px 3px / 3px 3px 3px 3px;
+		height: 100%;
+        display: inline-block;
+
+	    .title {
+	    	font-weight: bold;
+	    	font-size: 20px;
+			height: 40px;
+			width: 100%;
+			text-align: center;
+	    }
+
+	    .itembox {
+	    	height: 100%;
+	    	width: 100%;
+	        white-space: normal;
+	        text-align: left;
+	    }
+	}
+
+
+
+	.v-label-Header {
+	 font-size: 16px;
+	 color: #fed552;
+	 border-radius: $headerBorderRadius;
+	}
+
+	.v-label-HeaderSlogan {
+	 font-size: 16px;
+	 color: #2deff9;
+	 border-radius: $headerBorderRadius;
+	}
+
+
+	.v-label-Level2Header {
+	 color: #2debf5;
+	 background-color: #213f49;
+	 font-size: $headerFontSize;
+	 border-radius: $headerBorderRadius;
+	}
+
+	.v-panel-caption {
+	 color : #2bed1b;
+	 /* color: #2debf5;
+	 background-color: #213f49; */
+	 background-image: none;
+	 font-size: $headerFontSize;
+	 border-radius: $headerBorderRadius;
+	}
+
+
+	.v-caption-Level2Header {
+	 color: #2debf5;
+	 background-color: #213f49;
+	 font-size: $headerFontSize;
+	 border-radius: $headerBorderRadius;
+	}
+
+	.v-menubar-Header {
+	 font-size: $headerFontSize;
+	}
+
+	.v-menubar-menuitem-Header {
+	 font-size: 14px;
+	}
+
+	.v-menubar-menuitem-caption-Header {
+	 font-size: 14px;
+	}
+
+	.v-menubar-submenu-Header {
+	 font-size: 12px;
+	}
+
+	.v-menubar-selected-Header {
+	 font-size: 12px;
+	}
+
+	.v-menubar-menuitem-RestrictedHeader {
+	 font-size: 12px;
+     width:320px;
+     overflow: auto;
+	}
+
+	.v-menubar-menuitem-caption-RestrictedHeader {
+	 font-size: 12px;
+	 width:320px;
+	 overflow: auto;
+	}
+	
+	.v-menubar-submenu-RestrictedHeader {
+	 font-size: 12px;
+	 width:320px;
+	 overflow: auto;
+	}
+
+	.v-menubar-selected-RestrictedHeader {
+	 font-size: 12px;
+	 width:320px;
+	 overflow: auto;
+	}
+	
+}

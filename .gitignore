@@ -1,0 +1,11 @@
+target/
+gwt-unitCache/
+gwt-deploy/
+com.hack23.cia.web.widgets.WebWidgetSet/
+themes/base/
+themes/chameleon/
+themes/liferay/
+themes/reindeer/
+themes/valo/
+themes/runo/
+activemq-data/

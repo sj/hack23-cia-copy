@@ -1,0 +1,22 @@
+<jaxb:bindings
+	version="2.1"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	jaxb:extensionBindingPrefixes="xjc hj orm">
+
+	<jaxb:globalBindings localScoping="toplevel">
+		<jaxb:serializable/>
+		<xjc:superInterface name="com.hack23.cia.model.common.api.ModelObject"/>
+	  	<xjc:javaType name="java.util.Date" xmlType="xsd:date" adapter="com.hack23.cia.model.common.impl.xml.XmlDateTypeAdapter"/>
+  	  	<xjc:javaType name="java.util.Date" xmlType="xsd:time" adapter="com.hack23.cia.model.common.impl.xml.XmlTimeTypeAdapter"/>
+      	<xjc:javaType name="java.util.Date" xmlType="xsd:dateTime" adapter="com.hack23.cia.model.common.impl.xml.XmlDateTimeTypeAdapter"/>
+	</jaxb:globalBindings>
+
+	<jaxb:bindings schemaLocation="../xsd/personlista.xsd"
+		node="/xsd:schema">
+	</jaxb:bindings>
+
+</jaxb:bindings>

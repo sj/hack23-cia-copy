@@ -1,0 +1,33 @@
+$v-app-loading-text: "Loading Citizen Intelligence Agency:: Tracking politicians like bugs!";
+
+/* use 
+https://coolors.co/app/ 
+
+http://www.color-hex.com/color/FFFFFF
+http://www.color-hex.com/color/b2cbe5
+
+alt
+
+http://www.color-hex.com/color/A8BDFF
+
+
+*/
+
+$v-background-color: #13303f;
+$v-focus-color: #008780;
+$v-font-size: 14px;
+$v-font-weight: 600;
+$v-unit-size: 20px;
+$v-bevel: false;
+$v-shadow: false;
+$v-gradient: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-border-radius: 0;
+$v-border: 2px solid v-tone;
+$v-overlay-shadow: 0 0 0 2px (v-tint 10);
+$v-focus-style: $v-focus-color;
+$v-font-family: 'Inconsolata';
+$v-font-weight--header: 600;
+	
+@import "../valo/valo";

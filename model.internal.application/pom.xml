@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>parent-model-internal-pom</artifactId>
+    <groupId>com.hack23.cia</groupId>
+    <version>2018.8.18-SNAPSHOT</version>
+    <relativePath>../parent-model-internal-pom/pom.xml</relativePath>
+  </parent>
+  <artifactId>model.internal.application</artifactId>
+  <packaging>pom</packaging>
+  <name>model.internal.application</name>
+  <description>model.internal.application</description>
+  <url>github:https://hack23.github.io/cia/model.internal.application/</url>
+  <inceptionYear>2008</inceptionYear>
+  <modules>
+    <module>../model.internal.application.user.impl</module>
+  </modules>
+  <scm>
+    <connection>scm:git:https://github.com/Hack23/cia.git</connection>
+    <developerConnection>scm:git:https://github.com/Hack23/cia.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/Hack23/cia/tree/master/model.internal.application</url>
+  </scm>
+  <distributionManagement>
+    <site>
+      <id>github</id>
+      <url>github:http://hack23.github.io/cia/model.internal.application</url>
+    </site>
+  </distributionManagement>
+</project>

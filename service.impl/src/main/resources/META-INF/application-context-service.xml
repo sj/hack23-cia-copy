@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:kie="http://drools.org/schema/kie-spring"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://www.springframework.org/schema/tool
+	 http://www.springframework.org/schema/tool/spring-tool.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/cache
+     http://www.springframework.org/schema/cache/spring-cache.xsd
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/security
+     http://www.springframework.org/schema/security/spring-security-4.2.xsd
+     http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd">
+
+	<bean id="servicePropertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:cia-service.properties</value>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+	</bean>
+
+	<context:annotation-config />
+	<context:spring-configured />
+	<context:component-scan base-package="com.hack23.cia.service.impl" />
+
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:executor id="myExecutor" pool-size="5"/>
+	<task:scheduler id="myScheduler" pool-size="10"/>
+
+	<bean name="agentJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean" depends-on="JobContextHolder">
+	        <property name="jobClass" value="com.hack23.cia.service.impl.task.AgentJob"/>
+	        <property name="durability" value="true" />
+	</bean>
+
+	<bean id="agentJobCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="agentJob" />
+	    <property name="cronExpression" value="0 30 1 * * ?" />
+	</bean>
+
+	<bean name="refreshViewsJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean" depends-on="JobContextHolder">
+	        <property name="jobClass" value="com.hack23.cia.service.impl.task.RefreshViewsJob"/>
+	        <property name="durability" value="true" />
+	</bean>
+
+	<bean id="refreshViewsJobCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="refreshViewsJob" />
+	    <property name="cronExpression" value="0 30 2 * * ?" />
+	</bean>
+
+	<bean name="updateSearchIndexJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean" depends-on="JobContextHolder">
+	        <property name="jobClass" value="com.hack23.cia.service.impl.task.UpdateSearchIndexJob"/>
+	        <property name="durability" value="true" />
+	</bean>
+
+	<bean id="updateSearchIndexJobCronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="updateSearchIndexJob" />
+	    <property name="cronExpression" value="0 30 3 * * ?" />
+	</bean>
+
+
+	<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+
+    	<!-- Clustered support -->
+		<property name="dataSource" ref="dataSource"/>
+    	<property name="transactionManager" ref="transactionManager"/>
+ 		<property name="autoStartup" value="true" />
+ 		<property name="waitForJobsToCompleteOnShutdown" value="false"/>
+ 		<property name="overwriteExistingJobs" value="false"/>
+
+    	<property name="schedulerName" value="quartzScheduler"/>
+    	<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+ 		<property name="quartzProperties">
+        	<props>
+            	<prop key="org.quartz.jobStore.misfireThreshold">4</prop>
+            	<prop key="org.quartz.threadPool.threadCount">4</prop>
+            	<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+            	<prop key="org.quartz.jobStore.useProperties">false</prop>
+            	<prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+            	<prop key="org.quartz.jobStore.isClustered">true</prop>
+            	<prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</prop>
+       		</props>
+    	</property>
+
+		<property name="exposeSchedulerInRepository" value="true" />
+	    <property name="jobDetails">
+	        <list>
+	            <ref bean="agentJob" />
+	            <ref bean="updateSearchIndexJob" />
+	            <ref bean="refreshViewsJob" />
+	        </list>
+	    </property>
+	    <property name="triggers">
+	        <list>
+	            <ref bean="agentJobCronTrigger" />
+	            <ref bean="updateSearchIndexJobCronTrigger" />
+	            <ref bean="refreshViewsJobCronTrigger" />
+	        </list>
+	    </property>
+	</bean>
+
+
+	<bean id="SecureTaskExecutor"
+	          class="org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor">
+	     <constructor-arg ref="myExecutor"/>
+	</bean>
+
+	<security:global-method-security secured-annotations="enabled"/>
+
+	<security:authentication-manager alias="authenticationManager"/>
+
+	<import resource="classpath:META-INF/cia-jms-broker.xml" />
+	
+	<bean id="kiePostProcessor" class="org.kie.spring.KModuleBeanFactoryPostProcessor"/>
+
+</beans>
